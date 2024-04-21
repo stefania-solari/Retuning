@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Mapbox/Examples/0_PrefabScenes/Location-basedGame.unity
     guid: 42f6aa7ce7a604f16ade319663f46ceb
+  - enabled: 1
+    path: Assets/Return/Return.unity
+    guid: 97748868b33af421d9d87de3cff838ab
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: ad548116eedc54e76a553c6eb07b295f, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: b4ce5310de0c5422fb777cd593c03600, type: 2}

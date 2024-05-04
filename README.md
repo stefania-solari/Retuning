@@ -1,8 +1,8 @@
-Demo Project README
-Welcome to our demo project repository! 
+Demo Project README<br>
+Welcome to our demo project repository! <br>
 This README will guide you through getting started with the project and provide necessary information for running it successfully.
-
-Getting Started
+<br>
+Getting Started<be>
 This project is a demo that utilizes third-party services such as Mapbox and Replicate. Before running the project, you need to obtain access tokens for both services.
 
 <br>
@@ -32,11 +32,14 @@ You need to add your Mapbox access token to the project. Follow these steps:
 </ul>
 
 <br>
-Replicate Token
+Replicate Token<br>
 You'll need to add your Replicate access token to the project as well. Follow these steps:
-Open the script file named "MyReplicateAPICaller" in the project. (you will find insire "Retune" folder)
-Inside the script, find the variable named APIToken.
-Assign your Replicate access token to this variable.
+
+<ul>
+  <li>Open the script file named "MyReplicateAPICaller" in the project. (you will find inside "Retune" folder).</li>
+  <li>Inside the script, find the variable named APIToken.</li>
+  <li>Assign your Replicate access token to this variable.</li>
+</ul>
 
 After adding both tokens, you're ready to run the project!
 

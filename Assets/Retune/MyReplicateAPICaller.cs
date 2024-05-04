@@ -2,16 +2,39 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
+
 
 
 
 public class ReplicateAPICaller : MonoBehaviour
 {
+    private string APIToken = "YOUR_TOKEN_HERE";
     private string replicateAPIUrl = "https://api.replicate.com/v1/predictions";
     private string predictionId;
+
+
     
 	[SerializeField]
     public AudioSource audioSource;
+
+    // List to store strings to be added to the JSON text field
+    private List<string> textList = new List<string>();
+     string input = @"
+    {
+        ""version"": ""b61392adecdd660326fc9cfc5398182437dbe5e97b5decfb36e1a36de68b5b95"",
+        ""input"": {
+            ""text"": []
+        }
+    }";
+
+   
+
+
+   public GameObject audioPanel; 
+   public GameObject loaderPanel;
+
+
 
     public void stopAndSendData()
     {
@@ -20,12 +43,15 @@ public class ReplicateAPICaller : MonoBehaviour
 
     IEnumerator PostPredictionRequest()
     {
+        audioPanel.SetActive(false);
+        loaderPanel.SetActive(true);
+
         // Construct the JSON string representing the request body
         string input = @"
         {
             ""version"": ""b61392adecdd660326fc9cfc5398182437dbe5e97b5decfb36e1a36de68b5b95"",
             ""input"": {
-                ""text"": ""two starships are fighting in space with laser cannons""
+                ""text"": ""glass and forks clicking, clean recording""
             }
         }";
 
@@ -34,7 +60,7 @@ public class ReplicateAPICaller : MonoBehaviour
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(input);
         postRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
         postRequest.SetRequestHeader("Content-Type", "application/json");
-        postRequest.SetRequestHeader("Authorization", "Bearer r8_Ssck5ONZ7uaF2NqDHAfF8JRwMH7AcPd2MLGPE");
+        postRequest.SetRequestHeader("Authorization", "Bearer "+ APIToken);
 
         // Send the POST request
         yield return postRequest.SendWebRequest();
@@ -72,7 +98,7 @@ public class ReplicateAPICaller : MonoBehaviour
 
             // Create a UnityWebRequest object for the GET request
             UnityWebRequest getRequest = UnityWebRequest.Get(getUrl);
-            getRequest.SetRequestHeader("Authorization", "Bearer r8_Ssck5ONZ7uaF2NqDHAfF8JRwMH7AcPd2MLGPE");
+            getRequest.SetRequestHeader("Authorization", "Bearer "+ APIToken);
 
             // Send the GET request
             yield return getRequest.SendWebRequest();
@@ -101,10 +127,18 @@ public class ReplicateAPICaller : MonoBehaviour
                         Debug.Log("Prediction Response Chunk " + (i / maxChunkSize) + ": " + chunk);
                     }
 
+                    string filePath;
                     // Inside the PollPredictionStatus() coroutine after receiving the response
-                    string desktopPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "prediction_response.json");
-                    File.WriteAllText(desktopPath, responseJson);
-                    Debug.Log("Prediction response written to file: " + desktopPath);
+                    if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+                    {
+                        filePath = Path.Combine(Application.persistentDataPath, "prediction_response.json");
+                    }
+                    else
+                    {
+                        filePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "prediction_response.json");
+                    }
+                    File.WriteAllText(filePath, responseJson);
+                    Debug.Log("Prediction response written to file: " + filePath);
 
 
                     // Parse prediction data
@@ -149,6 +183,9 @@ public class ReplicateAPICaller : MonoBehaviour
 
 IEnumerator DownloadAndPlayAudio(string audioURL)
     {
+        loaderPanel.SetActive(false);
+        audioPanel.SetActive(true);
+        
         // Make the GET request
         using (UnityWebRequest www = UnityWebRequest.Get(audioURL))
         {
@@ -162,8 +199,20 @@ IEnumerator DownloadAndPlayAudio(string audioURL)
             }
             else
             {
-                // Save the audio file to cache directory
-                string filePath = Path.Combine(Application.temporaryCachePath, "audio.wav");
+
+                string filePath;
+                   // Check if running on mobile
+                if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    // Save the audio file to persistent data path
+                    filePath = Path.Combine(Application.persistentDataPath, "audio.wav");
+                }
+                else
+                {
+                    // Save the audio file to cache directory
+                    filePath = Path.Combine(Application.temporaryCachePath, "audio.wav");
+                }
+                
                 File.WriteAllBytes(filePath, www.downloadHandler.data);
                 Debug.Log("Audio saved to cache: " + filePath);
 

@@ -18,11 +18,13 @@ namespace Mapbox.Examples
 
 		void Update()
 		{
+			/*
 			
 			if (_controller.enabled)// Because the mouse control script interferes with this script
 			{
 				return;
 			}
+			*/
 
 			foreach (var item in Materials)
 			{

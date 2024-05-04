@@ -4,6 +4,7 @@ using UnityEngine;
 //Mapbox library
 using Mapbox.Examples;
 using Mapbox.Utils;
+using Unity.VisualScripting;
 
 public class EventPointer : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class EventPointer : MonoBehaviour
     [SerializeField] public Vector2d eventPose;
     MenuUIManager menuUiManager;
 
+      [SerializeField] public int publicDistance;
+
+    
     
     // Start is called before the first frame update
     void Start()
@@ -28,9 +32,7 @@ public class EventPointer : MonoBehaviour
     void Update()
     {
         floatandRotatePointer(); 
-             
-
-        
+    
     }
     private void floatandRotatePointer()
     {
@@ -45,10 +47,12 @@ public class EventPointer : MonoBehaviour
         var eventLocation = new GeoCoordinatePortable.GeoCoordinate(eventPose[0], eventPose[1]);
         var distance = currentPlayerLocation.GetDistanceTo(eventLocation);
         Debug.Log("Distance is: " + distance);
+        distance = publicDistance;
 
-        if (distance < 200)
+        if (distance < 500)
         {
             menuUiManager.DisplayStartEventPanel();
+
 
         }else
         {
